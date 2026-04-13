@@ -2,6 +2,9 @@
   "name": "yt-music-streaming-app",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=18"
+  },
   "workspaces": ["frontend", "backend"],
   "scripts": {
     "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",

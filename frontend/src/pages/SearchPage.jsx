@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchMusic } from '../api/music';
 import { getLikedSongs, toggleLikeSong } from '../api/library';
@@ -10,7 +10,8 @@ const filters = ['song', 'artist', 'album', 'playlist'];
 
 export default function SearchPage() {
   const [params] = useSearchParams();
-  const [query, setQuery] = useState(params.get('q') || 'Top music');
+  const qParam = params.get('q');
+  const [query, setQuery] = useState(qParam?.trim() ? qParam : 'Top music');
   const [filter, setFilter] = useState('song');
   const [items, setItems] = useState([]);
   const [likedIds, setLikedIds] = useState(new Set());
@@ -18,7 +19,14 @@ export default function SearchPage() {
   const [error, setError] = useState('');
   const { playTrack } = usePlayer();
 
-  const runSearch = async () => {
+  // Keep search box in sync when navigating from the top bar (?q=...) while on /search
+  useEffect(() => {
+    if (qParam != null && qParam.trim() !== '') {
+      setQuery(qParam);
+    }
+  }, [qParam]);
+
+  const runSearch = useCallback(async () => {
     setError('');
     setLoading(true);
     try {
@@ -31,11 +39,11 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, filter]);
 
   useEffect(() => {
     runSearch();
-  }, [filter]);
+  }, [runSearch]);
 
   const onLike = async (track) => {
     const { data } = await toggleLikeSong(track);
