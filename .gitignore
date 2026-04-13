@@ -1,21 +1,43 @@
 # Dependencies
 node_modules/
 
-# Environment (never commit secrets)
+# Environment — never commit secrets
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # Build output
+dist/
 frontend/dist/
 backend/dist/
+build/
 
-# Logs & debug
-npm-debug.log*
+# Vite / tooling cache
+frontend/node_modules/.vite/
+.cache/
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Tests / coverage
+coverage/
+.nyc_output/
 
 # Editor
 .idea/
+*.swp
+*.swo
 .vscode/*
 !.vscode/extensions.json
+
+# Optional local tooling
+*.local
