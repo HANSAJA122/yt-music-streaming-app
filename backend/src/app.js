@@ -9,6 +9,9 @@ import { errorHandler, notFound } from './middleware/errorHandler.js';
 
 const app = express();
 
+const allowedOrigins = new Set(env.frontendUrls);
+const isRailwayPreview = (origin = '') => origin.endsWith('.up.railway.app');
+
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
@@ -19,7 +22,14 @@ app.get('/', (req, res) => {
 
 app.use(
   cors({
-    origin: env.frontendUrl,
+    origin: (origin, callback) => {
+      // Allow server-to-server tools and health checks with no Origin header.
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.has(origin) || isRailwayPreview(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
     credentials: true
   })
 );

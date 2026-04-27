@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE_URL } from '../api/client';
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -28,7 +29,9 @@ export default function AuthPage() {
     } catch (err) {
       const msg =
         err.response?.data?.message ||
-        (err.code === 'ERR_NETWORK' ? 'Cannot reach API. Check VITE_API_URL and that the backend is running.' : err.message);
+        (err.code === 'ERR_NETWORK'
+          ? `Cannot reach API at ${API_BASE_URL}. Check VITE_API_URL / CORS and that backend is running.`
+          : err.message);
       setError(msg || 'Authentication failed');
     } finally {
       setLoading(false);
