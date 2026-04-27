@@ -1,14 +1,15 @@
 import app from './app.js';
 import { env } from './config/env.js';
-import { connectDB } from './config/db.js';
+import { connectDBWithRetry } from './config/db.js';
 
 const start = async () => {
-  await connectDB();
-
   const host = '0.0.0.0';
   app.listen(env.port, host, () => {
     console.log(`Backend listening on http://${host}:${env.port}`);
   });
+
+  // Keep the app booted on hosting platforms while DB credentials/network are being fixed.
+  void connectDBWithRetry();
 };
 
 start().catch((err) => {

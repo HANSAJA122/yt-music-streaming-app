@@ -9,6 +9,14 @@ import { errorHandler, notFound } from './middleware/errorHandler.js';
 
 const app = express();
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'PulseTube backend is running',
+    health: '/api/health'
+  });
+});
+
 app.use(
   cors({
     origin: env.frontendUrl,
