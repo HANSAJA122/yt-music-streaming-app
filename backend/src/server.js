@@ -5,8 +5,9 @@ import { connectDB } from './config/db.js';
 const start = async () => {
   await connectDB();
 
-  app.listen(env.port, () => {
-    console.log(`Backend running on http://localhost:${env.port}`);
+  const host = '0.0.0.0';
+  app.listen(env.port, host, () => {
+    console.log(`Backend listening on http://${host}:${env.port}`);
   });
 };
 
